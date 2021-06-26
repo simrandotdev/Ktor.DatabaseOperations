@@ -6,7 +6,6 @@ import io.ktor.server.netty.*
 import com.example.plugins.*
 import org.ktorm.database.Database
 import org.ktorm.dsl.from
-import org.ktorm.dsl.insert
 import org.ktorm.dsl.select
 
 fun main() {
@@ -20,8 +19,9 @@ fun main() {
             password = "rootpassword"
         )
 
-        database.insert(NotesEntity) {
-            set(it.note, "Wash Clothes")
+        var notes = database.from(NotesEntity).select()
+        for (row in notes) {
+            println(row[NotesEntity.note])
         }
     }.start(wait = true)
 }
