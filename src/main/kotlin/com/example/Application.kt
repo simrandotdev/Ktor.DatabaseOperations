@@ -5,8 +5,7 @@ import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import com.example.plugins.*
 import org.ktorm.database.Database
-import org.ktorm.dsl.from
-import org.ktorm.dsl.select
+import org.ktorm.dsl.*
 
 fun main() {
     embeddedServer(Netty, port = 8080, host = "0.0.0.0") {
@@ -19,9 +18,17 @@ fun main() {
             password = "rootpassword"
         )
 
-        var notes = database.from(NotesEntity).select()
-        for (row in notes) {
-            println(row[NotesEntity.note])
+        database.update(NotesEntity) {
+            set(it.note, "Working out")
+            where {
+                it.id eq 4
+            }
         }
+
+
+        database.delete(NotesEntity){
+            it.id eq 5
+        }
+
     }.start(wait = true)
 }
